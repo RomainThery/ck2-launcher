@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function() {      
+        $(".themeIcon").css('opacity', 0.5); 
+        if (localStorage.theme != undefined)
+        {
+           $('#wrapper').css('background-image', 'url(' +  localStorage.theme + '.jpg)');
+           $("#" + localStorage.theme).css('opacity', 1);
+        }
+        
+        $.ajax({
+            url: 'proxy.php',
+            type: 'POST',
+            data: {
+                address: 'http://www.paradoxplaza.com/in-game/ck2/launcher.html'
+            },
+            success: function(reply) {
+                $('#news').html(reply);
+            }
+        });
+        
+        $(".themeIcon").click(function(){
+            $(".themeIcon").css('opacity', 0.5);
+            
+            var url = this.id + ".jpg";
+            if (url == $('#wrapper').css('background-image').split('/').pop().replace(/\"|\'|\)/g,''))
+            {
+                $('#wrapper').css('background-image', 'url(bg.jpg)');
+                localStorage.theme = "bg";
+            }
+            else
+            {
+                $('#wrapper').css('background-image', 'url(' + url + ')');
+                $("#" + this.id).css('opacity', 1);
+                localStorage.theme = this.id;
+            }
+        });
+                
+        this.tooltip = function(){	
+                xOffset = 10;
+                yOffset = 20;				
+            $("img.tooltip").hover(function(e){
+                this.t = this.alt;
+                this.alt = "";
+                $("body").append("<p id='tooltip'>"+ this.t +"</p>");
+                $("#tooltip")
+                    .css("top",(e.pageY - xOffset) + "px")
+                    .css("left",(e.pageX + yOffset) + "px")
+                    .fadeIn("fast");
+            },
+            function(){
+                this.title = this.t;		
+                $("#tooltip").remove();
+            });	
+            $("a.tooltip").mousemove(function(e){
+                $("#tooltip")
+                    .css("top",(e.pageY - xOffset) + "px")
+                    .css("left",(e.pageX + yOffset) + "px");
+            });			
+        };
+    });
+</script>
+<title>Crusader Kings II Launcher</title>
+<style type="text/css">
+    html, body, table{
+        font-family: Arial, Tahoma, Verdana, Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        margin: 0px;
+        padding: 0px;
+    }
+    a{
+        color: #330000;
+        text-decoration: none;
+        font-weight:none;
+    }
+    a:visited{
+        
+        color: #330000;
+    }
+    a:hover{
+        color: #666666;
+    }
+    #wrapper{
+    background: url(bg.jpg) no-repeat top left;
+        height: 496px;
+        width: 920px;
+        margin: 0px auto;
+        border: 1px solid #000000;
+    }
+    #box{
+        margin-top: 160px;
+        margin-left: 22px;
+        width: 304px;
+        padding: 6px;
+    }
+    
+    .menu_item{
+        margin-left: 3px;
+    }
+        
+    #icons{
+        position: absolute;
+        margin-left: 160px;
+        margin-top: 128px;
+        cursor: pointer;
+    }
+</style>
+</head>
+    
+<body>
+<div id="wrapper">
+    <div id="icons">
+        
+        <img src="icon1.png" class="themeIcon tooltip" id="bg1" alt="Toggle launcher theme to Sword of Islam">
+        <img src="icon2.png" class="themeIcon tooltip" id="bg2" alt="Toggle launcher theme to Legacy of Rome">
+        <img src="icon3.png" class="themeIcon tooltip" id="bg3" alt="Toggle launcher theme to The Republic">
+        <img src="icon4.png" class="themeIcon tooltip" id="bg4" alt="Toggle launcher theme to The Old Gods">
+    </div>
+    <div id="news"></div>
+</div>
+</body>
+</html>
